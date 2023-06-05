@@ -41,7 +41,7 @@ router.get("/", async (req, res) => {
     try {
         const posts = await postModel.find()
             .populate({ path: "creator", select: "username liked posts" })
-            .select("-__v")
+            .populate({ path: "likes", select: "username" })
             .limit(limitQuery)
             .sort({ createdAt: -1 });
         

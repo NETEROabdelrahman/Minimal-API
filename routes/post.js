@@ -114,7 +114,6 @@ router.delete("/:userid/:postid",auth, async (req, res) => {
             res.status(500).json(error);
         }
     
-   // }
 });
 
 //update one

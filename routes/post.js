@@ -61,7 +61,7 @@ router.get("/:postid", async (req, res) => {
     try {
         const post = await postModel.find({ _id: req.params.postid })
             .populate({ path: "creator", select: "username liked posts" })
-            .select("__v")
+            .populate({ path: "likes", select: "username" })
             .sort({ createdAt: -1 });
         
       res.status(200).json(post);

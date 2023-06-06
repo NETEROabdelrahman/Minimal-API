@@ -34,15 +34,15 @@ router.post("/register", async (req, res) => {
 //login
 router.post("/login", async (req, res) => {
     const { username, password, like } = req.body;
-  
     try {
         const user = await userModel.findOne({ username });
         if (!user) {
-            res.status(404).send('incorrect username or password');
+            res.status(500).json({message:'incorrect username or password'});
+            return;
         }
         const isCorrectPassword = await bcrypt.compare(password, user.password);
-        if (!isCorrectPassword) {
-            return res.status(400).json({ message: "incorrect username or password" });
+        if (  !isCorrectPassword ) {
+            return res.status(500).json({ message: "incorrect username or password" });
         }
         const token = jwt.sign({ id: user._id, password:user.password }, "secret")
         res.json({

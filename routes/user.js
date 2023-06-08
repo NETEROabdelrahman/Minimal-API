@@ -48,19 +48,25 @@ router.get("/:id", async (req, res) => {
 );
 
 
-//like
-// router.post("/", async (req, res) => {
-//     const {username,likes} = req.body
+//get by search
+router.get("/search/:query", async (req, res) => {
+  const query = req.params.query;
+  const limitQuery = req.query.limit;
+  const regex = new RegExp(query, 'i');
+    
+    try {
+        const user = await userModel.find({ username: regex }).select("username _id").limit(limitQuery)
+      res.status(200).json(user);
+    } catch (error) {
+        console.log(error)
+      res.status(500).json(error);
+    }
+  } 
   
-//     try {
-//       const users = await userModel.find({});
-//       res.status(200).json(users);
-//     } catch (error) {
-//       res.status(500).json(error);
-//     }
-//   } 
-  
-// );
+);
+
+
+
 
 
 //delete all

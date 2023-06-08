@@ -35,14 +35,18 @@ router.post("/:userid",auth, async (req, res) => {
 
 //get
 router.get("/", async (req, res) => {
-    const limitQuery = req.query.limit
+    //const page = parseInt(req.query.page || 1);
+    const limit = parseInt(req.query.limit || 2);
+    //const startIndex = (page - 1) * limit;
+    //const endIndex = page * limit;
 
+    
   
     try {
         const posts = await postModel.find()
             .populate({ path: "creator", select: "username liked posts" })
             .populate({ path: "likes", select: "username" })
-            .limit(limitQuery)
+            .limit(limit)
             .sort({ createdAt: -1 });
         
         
@@ -66,6 +70,30 @@ router.get("/:postid", async (req, res) => {
         
       res.status(200).json(post);
     } catch (error) {
+      res.status(500).json(error);
+    }
+  
+  
+});
+
+
+//get by search
+router.get("/search/:query", async (req, res) => {
+    const query = req.params.query;
+    const limit = parseInt(req.query.limit || 2);
+
+    const regex = new RegExp(query, 'i');
+  
+    try {
+        const post = await postModel.find({ post:regex })
+            .populate({ path: "creator", select: "username liked posts" })
+            .populate({ path: "likes", select: "username" })
+            .limit(limit)
+            .sort({ createdAt: -1 });
+        
+      res.status(200).json(post);
+    } catch (error) {
+        console.log(error)
       res.status(500).json(error);
     }
   
